@@ -46,6 +46,11 @@
 
 
 
+
+
+
+
+
 My First Python Bot (The Struggle is Real)
 Hi! This is my very first Python project. I'm learning how to create Telegram bots using the aiogram library.
 

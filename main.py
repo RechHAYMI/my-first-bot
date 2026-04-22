@@ -11,10 +11,9 @@ dp = Dispatcher()
 async def start(message: types.Message):
     my_button = KeyboardButton(text="Start")
     my_kb = ReplyKeyboardMarkup(keyboard=[[my_button]], resize_keyboard=True)
-    await message.answer("Приветик! Это мой первый бот.", reply_markup=my_kb)
+    await message.answer("Погнали.", reply_markup=my_kb)
 @dp.message()
-async def copy_message(message: types.Message):
-    await message.answer(message.text)
+async def handle_all
 async def main():
     await dp.start_polling(bot)
 asyncio.run(main())

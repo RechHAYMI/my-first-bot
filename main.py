@@ -6,7 +6,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states import Profile
-from database import init_db, add_user
+from database import init_db, add_user, get_user_name, update_user_name
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=TOKEN)
@@ -21,6 +21,7 @@ async def start(message: types.Message):
     await message.answer("Привет! Нажми на кнопку ниже, чтобы начать.", reply_markup=my_kb)
 @dp.message(Profile.name)
 async def name(message: types.Message, state: FSMContext):
+    update_user_name(message.from_user.id, message.text)
     await state.clear()
     await message.answer(f"Имя {message.text} сохранено!")
 @dp.message()
@@ -30,10 +31,11 @@ async def handle_all(message: types.Message, state: FSMContext):
     elif message.text.lower() == "info":
         await message.answer("Привет, это мой первый бот на пайтон")
     elif message.text.lower() == "settings":
+        current_name = get_user_name(message.from_user.id)
         btn_name = KeyboardButton(text="Изменить имя")
         btn_back = KeyboardButton(text="Назад")
         settings_kb = ReplyKeyboardMarkup(keyboard=[[btn_name, btn_back]], resize_keyboard=True)
-        await message.answer("Вы в настройках что изменим?", reply_markup=settings_kb)
+        await message.answer(f"Твое имя: {current_name}, Что изменим? ", reply_markup=settings_kb)
     elif message.text.lower() == "изменить имя":
         await state.set_state(Profile.name)
         await message.answer("Как тебя зовут?")

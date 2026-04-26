@@ -6,7 +6,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states import Profile
-from database import init_db, add_user, get_user_name, update_user_name
+from database import init_db, add_user, get_user_name, update_user_name, add_expense
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=TOKEN)
@@ -42,7 +42,17 @@ async def handle_all(message: types.Message, state: FSMContext):
     elif message.text.lower() == "назад":
         await start(message)
     else:
-        await message.answer("Я тебя не понимаю.")
+        data = message.text.split()
+        if len(data) == 2:
+            try:
+                category = data[0]
+                summa = float(data[1])
+                add_expense(message.from_user.id, summa, category)
+                await message.answer("Сохранено")
+            except ValueError:
+                await message.answer("Сумму нужно вводить цифрами")
+        else:
+            await message.answer("Я тебя не понимаю. Введи расход (Еда 500) или нажми кнопку.")
 async def main():
     init_db()
     await dp.start_polling(bot)

@@ -1,5 +1,7 @@
 import sqlite3
 
+
+
 def init_db():
     conn = sqlite3.connect("users.db")
     cur = conn.cursor()
@@ -18,12 +20,16 @@ def init_db():
 
     conn.close()
 
+
+
 def add_user(user_id, name, username):
     conn = sqlite3.connect("users.db")
     cur = conn.cursor()
     cur.execute("INSERT OR IGNORE INTO users (id, name, username) VALUES (?, ?, ?)",
                 (user_id, name, username))
     
+
+
 def get_user_name(user_id):
     conn = sqlite3.connect("users.db")
     cur = conn.cursor()
@@ -36,6 +42,8 @@ def get_user_name(user_id):
     else:
         return "Аноним"
     
+
+
 def update_user_name(user_id, new_name):
     conn = sqlite3.connect("users.db")
     cur = conn.cursor()
@@ -44,6 +52,8 @@ def update_user_name(user_id, new_name):
     conn.commit()
     conn.close()
 
+
+
 def add_expense(user_id, amount, category):
     conn = sqlite3.connect("users.db")
     cur = conn.cursor()
@@ -51,3 +61,26 @@ def add_expense(user_id, amount, category):
                 (user_id, amount, category))
     conn.commit()
     conn.close()
+
+
+
+def get_total_expenses(user_id):
+    conn = sqlite3.connect("users.db")
+    cur = conn.cursor()
+    cur.execute("SELECT SUM(amount) FROM expenses WHERE user_id = ?",
+                (user_id,))
+    row = cur.fetchone()
+    conn.close()
+    if row and row[0]:
+        return row[0]
+    return 0
+
+
+def get_category_stats(user_id):
+    conn = sqlite3.connect("users.db")
+    cur = conn.cursor()
+    cur.execute("SELECT category, SUM(amount) FROM expenses WHERE user_id = ? GROUP BY category",
+                (user_id,))
+    row = cur.fetchall()
+    conn.close()
+    return row

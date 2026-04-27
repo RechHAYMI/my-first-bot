@@ -6,30 +6,53 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states import Profile
-from database import init_db, add_user, get_user_name, update_user_name, add_expense
+from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats
+
+
+
 load_dotenv()
+
 TOKEN = os.getenv("BOT_TOKEN")
+
 bot = Bot(token=TOKEN)
+
 dp = Dispatcher()
+
 @dp.message(Command("start"))
 async def start(message: types.Message):
     add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
     button_start = KeyboardButton(text="Start")
     button_info = KeyboardButton(text="Info")
     button_settings = KeyboardButton(text="Settings")
-    my_kb = ReplyKeyboardMarkup(keyboard=[[button_start, button_info], [button_settings]], resize_keyboard=True)
+    button_stats = KeyboardButton(text="Stats")
+    my_kb = ReplyKeyboardMarkup(keyboard=[[button_start, button_info], [button_settings, button_stats]], resize_keyboard=True)
     await message.answer("Привет! Нажми на кнопку ниже, чтобы начать.", reply_markup=my_kb)
+
+
+
 @dp.message(Profile.name)
 async def name(message: types.Message, state: FSMContext):
     update_user_name(message.from_user.id, message.text)
     await state.clear()
     await message.answer(f"Имя {message.text} сохранено!")
+
+
+
 @dp.message()
 async def handle_all(message: types.Message, state: FSMContext):
-    if message.text == "Start":
+    if message.text.lower() == "start":
         await message.answer("Погнали.")
     elif message.text.lower() == "info":
         await message.answer("Привет, это мой первый бот на пайтон")
+    elif message.text.lower() == "stats":
+        total_sum = get_total_expenses(message.from_user.id)
+        category_rows = get_category_stats(message.from_user.id)
+        report = f"💰 Общий итог: {total_sum} руб."\n
+        for row in  category_rows:
+            category = row[0]
+            amount = row[1]
+            report += f" {category}: {amount} руб. "\n
+        await message.answer(report)
     elif message.text.lower() == "settings":
         current_name = get_user_name(message.from_user.id)
         btn_name = KeyboardButton(text="Изменить имя")
@@ -53,7 +76,13 @@ async def handle_all(message: types.Message, state: FSMContext):
                 await message.answer("Сумму нужно вводить цифрами")
         else:
             await message.answer("Я тебя не понимаю. Введи расход (Еда 500) или нажми кнопку.")
+
+
+
 async def main():
     init_db()
     await dp.start_polling(bot)
+
+
+
 asyncio.run(main())

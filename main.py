@@ -6,7 +6,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states import Profile
-from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats
+from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats, delete_last_expense
 
 
 
@@ -25,7 +25,8 @@ async def start(message: types.Message):
     button_info = KeyboardButton(text="Info")
     button_settings = KeyboardButton(text="Settings")
     button_stats = KeyboardButton(text="Stats")
-    my_kb = ReplyKeyboardMarkup(keyboard=[[button_start, button_info], [button_settings, button_stats]], resize_keyboard=True)
+    button_cansel = KeyboardButton(text="Canсel")
+    my_kb = ReplyKeyboardMarkup(keyboard=[[button_start, button_info], [button_settings, button_stats], [button_cansel]], resize_keyboard=True)
     await message.answer("Привет! Нажми на кнопку ниже, чтобы начать.", reply_markup=my_kb)
 
 
@@ -47,11 +48,11 @@ async def handle_all(message: types.Message, state: FSMContext):
     elif message.text.lower() == "stats":
         total_sum = get_total_expenses(message.from_user.id)
         category_rows = get_category_stats(message.from_user.id)
-        report = f"💰 Общий итог: {total_sum} руб."\n
+        report = f"💰 Общий итог: {total_sum} руб.\n\n"
         for row in  category_rows:
             category = row[0]
             amount = row[1]
-            report += f" {category}: {amount} руб. "\n
+            report += f" {category}: {amount} руб. \n"
         await message.answer(report)
     elif message.text.lower() == "settings":
         current_name = get_user_name(message.from_user.id)
@@ -64,6 +65,9 @@ async def handle_all(message: types.Message, state: FSMContext):
         await message.answer("Как тебя зовут?")
     elif message.text.lower() == "назад":
         await start(message)
+    elif message.text.lower() == "canсel":
+        delete_last_expense(message.from_user.id)
+        await message.answer("Последния операция была отменена")
     else:
         data = message.text.split()
         if len(data) == 2:

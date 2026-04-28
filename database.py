@@ -88,9 +88,7 @@ def get_category_stats(user_id):
 
 
 def delete_last_expense(user_id):
-    conn = sqlite3.connect("users.db")
-    cur = conn.cursor()
-    cur.execute("DELETE FROM expenses WHERE id = (SELECT MAX(id) FROM expenses WHERE user_id = ?)",
-                (user_id,))
-    conn.commit()
-    conn.close()
+    with sqlite3.connect("users.db") as conn:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM expenses WHERE id = (SELECT MAX(id) FROM expenses WHERE user_id = ?)",
+                    (user_id,))

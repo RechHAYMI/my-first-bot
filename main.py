@@ -1,7 +1,9 @@
 import asyncio
 import os
 import csv
+import matplotlib.pyplot as plt
 from dotenv import load_dotenv
+from utils import generate_stats_chart
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile
 from aiogram.filters import Command
@@ -48,15 +50,14 @@ async def handle_all(message: types.Message, state: FSMContext):
     elif message.text.lower() == "info":
         await message.answer("Привет, это мой первый бот на пайтон")
     elif message.text.lower() == "stats":
-        total_sum = get_total_expenses(message.from_user.id)
-        category_rows = get_category_stats(message.from_user.id)
-        report = f"💰 Общий итог: {total_sum} руб.\n\n"
-        for row in  category_rows:
-            category = row[0]
-            amount = row[1]
-            avg_amount = row[2]
-            report += f" {category}: {amount} руб. (в среднем значние: {avg_amount:.2f}) \n\n"
-        await message.answer(report)
+        rows = get_category_stats(message.from_user.id)
+        if not rows:
+            await message.answer("У вас еще нету данных для статистики")
+            return
+        else:
+            photo_name = generate_stats_chart(rows, message.from_user.id)
+            await message.answer_photo(photo=FSInputFile(photo_name))
+            os.remove(photo_name)
     elif message.text.lower() == "settings":
         current_name = get_user_name(message.from_user.id)
         btn_name = KeyboardButton(text="Изменить имя")

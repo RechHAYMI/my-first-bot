@@ -89,16 +89,17 @@ async def handle_all(message: types.Message, state: FSMContext):
         data = message.text.split()
         if len(data) == 2:
             try:
-                category = data[0]
+                category = data[0].lower().capitalize()
                 clean_summa = data[1].replace(",", ".")
                 summa = float(clean_summa)
                 if len(category) > 20:
                     await message.answer("Название слишком длинное (max 20 симв.)")
-                elif summa > 0 and summa < 100000:
-                    add_expense(message.from_user.id, summa, category)
-                    await message.answer("Сохранено")
                 else:
-                    await message.answer("Ошибка, сумма должна быть больше нуля и меньше 100000 и длина не болье 20 символов")
+                    if summa > 0 and summa < 100000:
+                        add_expense(message.from_user.id, summa, category)
+                        await message.answer("Сохранено")
+                    else:
+                        await message.answer("Ошибка, сумма должна быть больше нуля и меньше 100000.")
             except ValueError:
                 await message.answer("Сумму нужно вводить цифрами")
         else:

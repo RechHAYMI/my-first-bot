@@ -4,8 +4,8 @@ import csv
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 from utils import generate_stats_chart
-from aiogram import Bot, Dispatcher, types
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states import Profile
@@ -101,12 +101,23 @@ async def handle_all(message: types.Message, state: FSMContext):
                     return
 
                 add_expense(message.from_user.id, summa, category)
-                await message.answer("Сохранено")
+                kb = InlineKeyboardMarkup(inline_keyboard=[
+                    [
+                        InlineKeyboardButton(text="Удалить", callback_data="delete_exp")
+                    ]
+                ])
+                await message.answer(f"Сохранено: {category}", reply_markup=kb)
             except ValueError:
                 await message.answer("Сумму нужно вводить цифрами")
         else:
             await message.answer("Я тебя не понимаю. Введи расход (Еда 500) или нажми кнопку.")
 
+
+@dp.callback_query(F.data == "delete_exp")
+async def delete_callback(callback: types.CallbackQuery):
+    delete_last_expense(callback.from_user.id)
+    await callback.answer("Расход удален!")
+    await callback.message.edit_text("Запись успешно удалена!")
 
 
 async def main():
@@ -115,4 +126,4 @@ async def main():
 
 
 
-asyncio.run(main())
+asyncio.run(main()) 

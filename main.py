@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 from utils import generate_stats_chart
 from aiogram import Bot, Dispatcher, types, F
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
+from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext
 from states import Profile
+from keyboards import get_main_kb, get_delete_kb, get_settings_kb
 from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats, delete_last_expense, get_all_expenses
 
 
@@ -24,14 +25,7 @@ dp = Dispatcher()
 @dp.message(Command("start"))
 async def start(message: types.Message):
     add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
-    button_start = KeyboardButton(text="Start")
-    button_info = KeyboardButton(text="Info")
-    button_settings = KeyboardButton(text="Settings")
-    button_stats = KeyboardButton(text="Stats")
-    button_cansel = KeyboardButton(text="Canсel")
-    button_export = KeyboardButton(text="Export")
-    my_kb = ReplyKeyboardMarkup(keyboard=[[button_start, button_info], [button_settings, button_stats], [button_cansel, button_export]], resize_keyboard=True)
-    await message.answer("Привет! Нажми на кнопку ниже, чтобы начать.", reply_markup=my_kb)
+    await message.answer("Привет!", reply_markup=get_main_kb())
 
 
 
@@ -60,10 +54,7 @@ async def handle_all(message: types.Message, state: FSMContext):
             os.remove(photo_name)
     elif message.text.lower() == "settings":
         current_name = get_user_name(message.from_user.id)
-        btn_name = KeyboardButton(text="Изменить имя")
-        btn_back = KeyboardButton(text="Назад")
-        settings_kb = ReplyKeyboardMarkup(keyboard=[[btn_name, btn_back]], resize_keyboard=True)
-        await message.answer(f"Твое имя: {current_name}, Что изменим? ", reply_markup=settings_kb)
+        await message.answer(f"Твое имя: {current_name}, Что изменим? ", reply_markup=get_settings_kb())
     elif message.text.lower() == "изменить имя":
         await state.set_state(Profile.name)
         await message.answer("Как тебя зовут?")
@@ -101,12 +92,7 @@ async def handle_all(message: types.Message, state: FSMContext):
                     return
 
                 add_expense(message.from_user.id, summa, category)
-                kb = InlineKeyboardMarkup(inline_keyboard=[
-                    [
-                        InlineKeyboardButton(text="Удалить", callback_data="delete_exp")
-                    ]
-                ])
-                await message.answer(f"Сохранено: {category}", reply_markup=kb)
+                await message.answer(f"Сохранено: {category}", reply_markup=get_delete_kb())
             except ValueError:
                 await message.answer("Сумму нужно вводить цифрами")
         else:
@@ -126,4 +112,4 @@ async def main():
 
 
 
-asyncio.run(main()) 
+asyncio.run(main())

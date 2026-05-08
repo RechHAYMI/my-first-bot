@@ -2,6 +2,7 @@ import asyncio
 import os
 import csv
 import matplotlib.pyplot as plt
+import logging
 from dotenv import load_dotenv
 from utils import generate_stats_chart
 from aiogram import Bot, Dispatcher, types, F
@@ -18,12 +19,19 @@ load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", filename="bot.log", encoding="utf-8")
+logger = logging.getLogger(__name__)
+
+
+
 bot = Bot(token=TOKEN)
 
 dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
+    logger.info(f"Пользователь {message.from_user.id} зарегистрировался.")
     add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
     await message.answer("Привет!", reply_markup=get_main_kb())
 
@@ -65,6 +73,7 @@ async def handle_all(message: types.Message, state: FSMContext):
         await message.answer("Последния операция была отменена")
     elif message.text.lower() == "export":
         rows = get_all_expenses(message.from_user.id)
+        logger.info(f"Пользователь {message.from_user.id} экспортировал свои данные.")
         if not rows:
             await message.answer("У вас пока нет данных для экспорта.")
             return
@@ -94,6 +103,7 @@ async def handle_all(message: types.Message, state: FSMContext):
                 add_expense(message.from_user.id, summa, category)
                 await message.answer(f"Сохранено: {category}", reply_markup=get_delete_kb())
             except ValueError:
+                logger.warning(f"Пользователь {message.from_user.id} ввел некоректную сумму")
                 await message.answer("Сумму нужно вводить цифрами")
         else:
             await message.answer("Я тебя не понимаю. Введи расход (Еда 500) или нажми кнопку.")
@@ -101,6 +111,7 @@ async def handle_all(message: types.Message, state: FSMContext):
 
 @dp.callback_query(F.data == "delete_exp")
 async def delete_callback(callback: types.CallbackQuery):
+    logger.info(f"Пользователь {callback.from_user.id} удалил свой последний расход")
     delete_last_expense(callback.from_user.id)
     await callback.answer("Расход удален!")
     await callback.message.edit_text("Запись успешно удалена!")
@@ -108,8 +119,8 @@ async def delete_callback(callback: types.CallbackQuery):
 
 async def main():
     init_db()
+    logger.info("Бот запущен и готов к работе")
     await dp.start_polling(bot)
-
 
 
 asyncio.run(main())

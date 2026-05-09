@@ -8,8 +8,8 @@ from utils import generate_stats_chart
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
-from aiogram.fsm.context import FSMContext
-from states import Profile
+from aiogram.fsm.context import FSMContext, 
+from states import Profile, FSMExpense
 from keyboards import get_main_kb, get_delete_kb, get_settings_kb
 from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats, delete_last_expense, get_all_expenses
 
@@ -85,28 +85,10 @@ async def handle_all(message: types.Message, state: FSMContext):
         file_to_send = FSInputFile(filename)
         await message.answer_document(file_to_send, caption="Ваш отчет готов!")
         os.remove(filename)
-    else:
-        data = message.text.split()
-        if len(data) == 2:
-            try:
-                category = data[0].lower().capitalize()
-                clean_summa = data[1].replace(",", ".")
-                summa = float(clean_summa)
-                if len(category) > 20:
-                    await message.answer("Название слишком длинное (max 20 симв.)")
-                    return
-
-                if not (0 < summa < 100000):
-                    await message.answer("Ошибка, сумма должна быть больше нуля и меньше 100000.")
-                    return
-
-                add_expense(message.from_user.id, summa, category)
-                await message.answer(f"Сохранено: {category}", reply_markup=get_delete_kb())
-            except ValueError:
-                logger.warning(f"Пользователь {message.from_user.id} ввел некоректную сумму")
-                await message.answer("Сумму нужно вводить цифрами")
-        else:
-            await message.answer("Я тебя не понимаю. Введи расход (Еда 500) или нажми кнопку.")
+    elif message.text.lower() == "добавить расход":
+        await state.set_state(FSMExpense.categor)
+        await message.answer("Выберите категорию ниже", reply_markup=get_categor_kb())
+        get_categor_kb(callback.from_user.id)
 
 
 @dp.callback_query(F.data == "delete_exp")
@@ -115,6 +97,29 @@ async def delete_callback(callback: types.CallbackQuery):
     delete_last_expense(callback.from_user.id)
     await callback.answer("Расход удален!")
     await callback.message.edit_text("Запись успешно удалена!")
+
+
+@dp.callback_query(F.data.startswith("cat_"))
+async def categor(callback: types.CallbackQuery, state: FSMContext):
+    category_name = callback.data.split("_")[1]
+    await state.update_data(categor=category_name)
+    await state.set_state(FSMExpense.SUM)
+    await callback.message.answer(f"Выбрана категория: {category_name}. Теперь введите сумму.")
+    await callback.answer()
+
+
+
+@dp.message(FSMExpense.sum)
+async def process_sum(message: types.Message, state: FSMContext):
+    user_data = await state.get_data()
+    category = user_data.get("categor")
+    try:
+        amount = float(message.text.replace(",", "."))
+        add_expense(message.from_user.id, amount, category)
+        await state.clear()
+        await message.answer(f"Записано: {amount} руб. в категорию {category}")
+    except ValueError:
+        await message.answer("Ошибка! Введи сумму цифрами (например, 500 или 150.50)")
 
 
 async def main():

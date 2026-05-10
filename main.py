@@ -10,6 +10,7 @@ from aiogram.filters import Command
 from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext, 
 from states import Profile, FSMExpense
+from middlewares.db_check import DbCheckMiddleware
 from keyboards import get_main_kb, get_delete_kb, get_settings_kb
 from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats, delete_last_expense, get_all_expenses
 
@@ -29,10 +30,14 @@ bot = Bot(token=TOKEN)
 
 dp = Dispatcher()
 
+
+dp.message.outer_middleware(DbCheckMiddleware())
+dp.callback_query.outer_middleware(DbCheckMiddleware())
+
+
 @dp.message(Command("start"))
 async def start(message: types.Message):
     logger.info(f"Пользователь {message.from_user.id} зарегистрировался.")
-    add_user(message.from_user.id, message.from_user.first_name, message.from_user.username)
     await message.answer("Привет!", reply_markup=get_main_kb())
 
 

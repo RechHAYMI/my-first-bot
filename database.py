@@ -101,4 +101,4 @@ def user_exists(user_id):
         cur.execute("SELECT 1 FROM users WHERE user_id ?",
                     (user_id,))
         row = cur.fetchall()
-    return row if not None
+    return row is not None

@@ -8,7 +8,7 @@ from utils import generate_stats_chart
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
-from aiogram.fsm.context import FSMContext, 
+from aiogram.fsm.context import FSMContext
 from states import Profile FSMExpense
 from middlewares.db_check import DbCheckMiddleware
 from keyboards import get_main_kb, get_delete_kb, get_settings_kb

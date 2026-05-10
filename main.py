@@ -9,7 +9,7 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext, 
-from states import Profile, FSMExpense
+from states import Profile FSMExpense
 from middlewares.db_check import DbCheckMiddleware
 from keyboards import get_main_kb, get_delete_kb, get_settings_kb
 from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats, delete_last_expense, get_all_expenses

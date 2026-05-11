@@ -98,7 +98,7 @@ def get_all_expenses(user_id):
 def user_exists(user_id):
     with sqlite3.connect(DB_NAME) as conn:
         cur = conn.cursor()
-        cur.execute("SELECT 1 FROM users WHERE user_id ?",
+        cur.execute("SELECT 1 FROM users WHERE = ?",
                     (user_id,))
         row = cur.fetchall()
     return row is not None

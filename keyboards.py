@@ -29,6 +29,6 @@ def get_settings_kb():
 
 def get_categor_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Еда", callback_data="cat_food")]
+        [InlineKeyboardButton(text="Еда", callback_data="cat_food")],
         [InlineKeyboardButton(text="Такси", callback_data="cat_taxi")]
     ])

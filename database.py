@@ -102,3 +102,23 @@ def user_exists(user_id):
                     (user_id,))
         row = cur.fetchall()
     return row is not None
+
+
+
+def check_user(user_id):
+    with sqlite3.connect(DB_NAME) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT 1 FROM users WHERE id = ?",
+                    (user_id,))
+        row = cur.fetchall()
+    return row is not None
+
+
+
+
+def all_user_id(user_id):
+     with sqlite3.connect(DB_NAME) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT id FROM users")
+        row = cur.fetchall()
+    return row

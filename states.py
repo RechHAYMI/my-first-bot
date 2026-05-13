@@ -7,3 +7,7 @@ class Profile(StatesGroup):
 class FSMExpense(StatesGroup):
     categor = State()
     sum = State()
+
+
+class Broadcast(StatesGroup):
+    text = State()

@@ -9,10 +9,10 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext
-from states import Profile, FSMExpense
+from states import Profile, FSMExpense, Broadcast
 from main_middleware import ShadowMiddleware
 from keyboards import get_main_kb, get_delete_kb, get_settings_kb
-from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats, delete_last_expense, get_all_expenses
+from database import init_db, add_user, get_user_name, update_user_name, add_expense, get_total_expenses, get_category_stats, delete_last_expense, get_all_expenses, check_user, all_user_id
 
 
 
@@ -34,6 +34,34 @@ dp = Dispatcher()
 
 dp.message.outer_middleware(ShadowMiddleware())
 dp.callback_query.outer_middleware(ShadowMiddleware())
+
+
+
+@dp.message(Command("sendall"))
+async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool):
+    if is_admin:
+        state.set_state(Broadcast.text)
+        await message.answer(f"{message.from_user.id} Жду контент для рассылки")
+    else:
+        await message.answer("Отказано в доступе")
+
+
+
+@dp.message(Broadcast.text)
+async def mailing_logic(message: types.Message, state: FSMContext):
+    users = all_user_id()
+    count = 0
+    errors = 0
+    for user in users:
+        try:
+            await message.copy_to(chat_id=user[0])
+            count += 1
+        except Exception as e:
+            print(f"Не удалось отправить {user[0]}. Ошибка: {e}")
+            errors += 0
+    await message.answer(f"Рассылка завершена! Получили: {count}, Не смогли получить: {errors}")
+    await state.clear()
+
 
 
 @dp.message(Command("start"))

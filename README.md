@@ -1,97 +1,99 @@
- My First Python Bot (The Struggle is Real)
-Привет! Это мой самый первый проект на Python. Я учусь создавать Telegram-ботов с помощью библиотеки aiogram
+# 📊 MoneyFlow Bot | Day 40+ Progress
+
+### 🐍 О проекте
+Приветсвую всех, это мой первый "масштабный" проект на python, сейчас это мой основной проект.
+
+Бот помогает вести учет финансов, но главная его цель для меня — **научиться писать профессиональный код**.
+
+---
+
+### 🚀 Что под капотом (Stack)
+Я выбрал современные инструменты, которые используют в реальном продакшене:
+
+* **Framework:** [aiogram 3.x](https://github.com/aiogram/aiogram) 
+* **Database:** SQLite3 (переезжаем на PostgreSQL)
+* **Architecture:** Middleware, FSM (Finite State Machine), Router-based logic
+* **OS:** Разработка ведется полностью на **Arch Linux** 🖥️
+
+---
+
+### 🔥 Ключевые фичи
+- ✅ **Admin ShadowMiddleware:** Умная проверка прав доступа.
+- 📬 **Smart Broadcast:** Система рассылки через `copy_to` для сохранения оригинального контента.
+- 📝 **FSM Logic:** Четкие сценарии взаимодействия, чтобы пользователь не запутался.
+- 📈 **Future:** В планах графики статистики через Matplotlib.
+- ⌨️ **Inline Keyboard** Инлайн кнопочки
+
+---
+
+### 📂 Структура проекта
+Я стараюсь следовать принципам чистого кода, поэтому проект разбит на модули:
+- `handlers/` — обработка команд и сообщений.
+- `middlewares/` — фильтры и проверка прав.
+- `database/` — вся логика работы с БД.
+- `states/` — состояния для FSM.
+- `Keyboard/` — Кнопки.
+
+---
+
+### 🛠 Как запустить (для тех, кто хочет потыкать)
+1. Склонируйте репозиторий:
+   ```bash
+   git clone [https://github.com/твой_ник/твой_репозиторий.git](https://github.com/твой_ник/твой_репозиторий.git)
+2. Установите зависимости:
+   pip install -r requirements.txt
+3. Создайте .env файл и добавьте туда свой BOT_TOKEN.
+4. Запускайте python main.py
 
 
 
 
- Что я прошел, пока делал это:
-1 --- Понял, что ООП — это не страшно (почти).
-
-2 --- Узнал, что асинхронность (async/await) заставляет мозг кипеть.
-
-3 --- Сражался с блокировками, прокси и VPN 
-
-4 --- Научился прятать токены в .env, чтобы меня не взломали
 
 
 
+# 📊 MoneyFlow Bot | Day 40+ Progress
 
- Что умеет этот бот:
-1 --- Здороваться: Отвечает на команду /start очень дружелюбным сообщением.
+### 🐍 About the Project
+Hello everyone, this is my first "large-scale" project in Python, and it's currently my main project.
 
-2 --- Работать эхом: Повторяет всё, что ты ему напишешь. Простой, но гордый механизм!
+The bot helps me keep track of my finances, but its main goal for me is to learn how to write professional code.
 
+---
 
+### 🚀 What's Under the Hood (Stack)
+I chose modern tools that are used in real production:
 
+* **Framework:** [aiogram 3.x](https://github.com/aiogram/aiogram)
+* **Database:** SQLite3 (we're moving to PostgreSQL)
+* **Architecture:** Middleware, FSM (Finite State Machine), Router-based logic
+* **OS:** Development is conducted entirely on **Arch Linux** 🖥️
 
- Как запустить (для тех, у кого есть VPN):
-1 --- Клонируй репозиторий: git clone <ссылка>
+---
 
-2 --- Установи зависимости: pip install aiogram python-dotenv
+### 🔥 Key Features
+- ✅ **Admin ShadowMiddleware:** Smart access rights checking.
+- 📬 **Smart Broadcast:** Copy-to broadcasting system to preserve original content.
+- 📝 **FSM Logic:** Clear interaction scenarios to avoid user confusion.
+- 📈 **Future:** Plans include statistics graphics via Matplotlib.
+- ⌨️ **Inline Keyboard** Inline buttons
 
-3 --- Создай файл .env и положи туда свой BOT_TOKEN.
+---
 
-4 --- Запускай: python main.py
+### 📂 Project Structure
+I try to follow clean code principles, so the project is divided into modules:
+- `handlers/` — command and message processing.
+- `middlewares/` — filters and permissions checking.
+- `database/` — all database logic.
+- `states/` — states for FSM.
+- `Keyboard/` — Buttons.
 
+---
 
-
-
- Планы на будущее:
-1 --- [ ] Добавить кнопки (Inline и Reply).
-
-2 --- [ ] Научить бота пересылать картинки и стикеры.
-
-3 --- [ ] Выложить его на хостинг, чтобы он работал 24/7 без моего компьютера.
-
-
-
-
-
-
-
-
-
-My First Python Bot (The Struggle is Real)
-Hi! This is my very first Python project. I'm learning how to create Telegram bots using the aiogram library.
-
-
-
-
- What I went through while doing this:
-1 --- I realized that OOP is not scary (almost).
-
-2 --- I learned that asynchrony (async/await) makes the brain boil.
-
-3--- Struggled with locks, proxies and VPNs 
-
-4 --- I learned how to hide tokens in .env so that I wouldn't be hacked
-
-
-
-
- What this bot can do:
-1 --- Say hello: Responds to the /start command with a very friendly message.
-
-2 --- Echo operation: Repeats everything you write to him. A simple but proud mechanism!
-
-
-
-
- How to launch (for those who have a VPN):
-1 - Clone the repository: git clone <link>
-
-2 --- Install dependencies: pip install aiogram python-dotenv
-
-3 --- Create an .env file and put your BOT_TOKEN there.
-
-4 --- Run: python main.py
-
-
-
-
- Future plans:
-1 --- [ ] Add buttons (Inline and Reply).
-
-2 --- [ ] Teach the bot to send pictures and stickers.
-
-3 --- [ ] Upload it to a hosting service so that it works 24/7 without my computer.
+### 🛠 How to run (for those who want to tinker)
+1. Clone the repository:
+```bash
+    git clone [https://github.com/твой_ник/твой_реписорий.git](https://github.com/твой_ник/твой_реписорий.git)
+2. Install dependencies:
+pip install -r requirements.txt
+3. Create a .env file and add your BOT_TOKEN there.
+4. Run python main.py

@@ -3,6 +3,7 @@ import os
 import csv
 import matplotlib.pyplot as plt
 import logging
+from handlers import common
 from dotenv import load_dotenv
 from utils import generate_stats_chart
 from aiogram import Bot, Dispatcher, types, F
@@ -64,13 +65,6 @@ async def mailing_logic(message: types.Message, state: FSMContext):
 
 
 
-@dp.message(Command("start"))
-async def start(message: types.Message):
-    logger.info(f"Пользователь {message.from_user.id} зарегистрировался.")
-    await message.answer("Привет!", reply_markup=get_main_kb())
-
-
-
 @dp.message(Profile.name)
 async def name(message: types.Message, state: FSMContext):
     update_user_name(message.from_user.id, message.text)
@@ -81,11 +75,7 @@ async def name(message: types.Message, state: FSMContext):
 
 @dp.message()
 async def handle_all(message: types.Message, state: FSMContext):
-    if message.text.lower() == "start":
-        await message.answer("Погнали.")
-    elif message.text.lower() == "info":
-        await message.answer("Привет, это мой первый бот на пайтон")
-    elif message.text.lower() == "stats":
+    if message.text.lower() == "stats":
         rows = get_category_stats(message.from_user.id)
         if not rows:
             await message.answer("У вас еще нету данных для статистики")
@@ -100,8 +90,6 @@ async def handle_all(message: types.Message, state: FSMContext):
     elif message.text.lower() == "изменить имя":
         await state.set_state(Profile.name)
         await message.answer("Как тебя зовут?")
-    elif message.text.lower() == "назад":
-        await start(message)
     elif message.text.lower() == "canсel":
         delete_last_expense(message.from_user.id)
         await message.answer("Последния операция была отменена")
@@ -122,7 +110,6 @@ async def handle_all(message: types.Message, state: FSMContext):
     elif message.text.lower() == "добавить расход":
         await state.set_state(FSMExpense.categor)
         await message.answer("Выберите категорию ниже", reply_markup=get_categor_kb())
-        get_categor_kb(callback.from_user.id)
 
 
 @dp.callback_query(F.data == "delete_exp")
@@ -137,7 +124,7 @@ async def delete_callback(callback: types.CallbackQuery):
 async def categor(callback: types.CallbackQuery, state: FSMContext):
     category_name = callback.data.split("_")[1]
     await state.update_data(categor=category_name)
-    await state.set_state(FSMExpense.SUM)
+    await state.set_state(FSMExpense.sum)
     await callback.message.answer(f"Выбрана категория: {category_name}. Теперь введите сумму.")
     await callback.answer()
 
@@ -159,6 +146,7 @@ async def process_sum(message: types.Message, state: FSMContext):
 async def main():
     init_db()
     logger.info("Бот запущен и готов к работе")
+    dp.include_router(common.router)
     await dp.start_polling(bot)
 
 

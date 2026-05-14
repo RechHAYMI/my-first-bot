@@ -10,4 +10,4 @@ def generate_stats_chart(data, user_id):
     name = f"{user_id}.png"
     plt.savefig(name)
     plt.close()
-    return name 
+    return name

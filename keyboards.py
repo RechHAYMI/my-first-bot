@@ -7,7 +7,7 @@ def get_main_kb():
         [KeyboardButton(text="Start"), KeyboardButton(text="Info")],
         [KeyboardButton(text="Settings"), KeyboardButton(text="Stats")],
         [KeyboardButton(text="Canсel"), KeyboardButton(text="Export")],
-        [KeyboardButton(text="Добавить расход")]
+        [KeyboardButton(text="add expenses")]
     ]
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 

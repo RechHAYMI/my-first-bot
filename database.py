@@ -20,7 +20,7 @@ def init_db():
 
 
 
-def add_user(user_id, name, username):
+def db_add_user(user_id, name, username):
     with sqlite3.connect(DB_NAME) as conn:
         cur = conn.cursor()
         cur.execute("INSERT OR IGNORE INTO users (id, name, username) VALUES (?, ?, ?)",
@@ -49,7 +49,7 @@ def update_user_name(user_id, new_name):
 
 
 
-def add_expense(user_id, amount, category):
+def db_add_expense(user_id, amount, category):
     with sqlite3.connect(DB_NAME) as conn:
         cur = conn.cursor()
         cur.execute("INSERT INTO expenses (user_id, amount, category) VALUES (?, ?, ?)",

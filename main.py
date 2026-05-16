@@ -8,7 +8,7 @@ from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from states import Broadcast
-from main_middleware import ShadowMiddleware 
+from middlewares.main_middleware import ShadowMiddleware
 from database import init_db, all_user_id
 
 

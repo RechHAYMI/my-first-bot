@@ -5,17 +5,17 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-
+from parser import shadow_parser
 from handlers import common, expenses, settings
 from database import init_db, all_user_id
 from states import Broadcast
 from middlewares.main_middleware import ShadowMiddleware
 
-# Загрузка переменных окружения
+
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 
-# Настройка логирования
+
 logging.basicConfig(
     level=logging.INFO, 
     format="%(asctime)s - %(levelname)s - %(message)s", 
@@ -24,11 +24,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Инициализация бота и диспетчера
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Подключение мидлварей
+
 dp.message.outer_middleware(ShadowMiddleware())
 dp.callback_query.outer_middleware(ShadowMiddleware())
 
@@ -49,9 +49,10 @@ async def mailing_logic(message: types.Message, state: FSMContext):
         try:
             await message.copy_to(chat_id=user[0])
             count += 1
+            await asyncio.sleep(0.05)
         except Exception as e:
             print(f"Не удалось отправить {user[0]}. Ошибка: {e}")
-            errors += 1  # Поправил: теперь ошибки считаются корректно
+            errors += 1  
             
     await message.answer(f"Рассылка завершена! Получили: {count}, Не смогли получить: {errors}")
     await state.clear()
@@ -62,6 +63,7 @@ async def main():
     dp.include_router(common.router)
     dp.include_router(expenses.router)
     dp.include_router(settings.router)
+    asyncio.create_task(shadow_parser())
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
 import asyncio
+import httpx 
+import beautifulsoup4
 from database import all_user_id
 from main import bot
 

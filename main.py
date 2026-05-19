@@ -10,10 +10,7 @@ from handlers import common, expenses, settings
 from database import init_db, all_user_id
 from states import Broadcast
 from middlewares.main_middleware import ShadowMiddleware
-
-
-load_dotenv()
-TOKEN = os.getenv("BOT_TOKEN")
+from config import bot
 
 
 logging.basicConfig(

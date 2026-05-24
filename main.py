@@ -1,6 +1,7 @@
 import asyncio
 import os
 import logging
+import asyncpg
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
@@ -61,6 +62,21 @@ async def main():
     dp.include_router(expenses.router)
     dp.include_router(settings.router)
     asyncio.create_task(shadow_parser())
+    pool = await asyncpg.create_pool(
+    user='alex_developer',
+    password='my_secret_password',
+    database='bot_data',
+    host='127.0.0.1',
+    port=5432
+)
+    await pool.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        telegram_id BIGINT PRIMARY KEY,
+        username VARCHAR(50),
+        first_name VARCHAR(100),
+        registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

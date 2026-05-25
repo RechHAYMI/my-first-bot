@@ -23,7 +23,7 @@
 - 📝 **FSM Logic:** Четкие сценарии взаимодействия, чтобы пользователь не запутался.
 - 📈 **Future:** В планах графики статистики через Matplotlib.
 - ⌨️ **Inline Keyboard** Инлайн кнопочки
-- 🐳 ** Docker Упакован в Docker
+- 🐳 **Docker Упакован** в Docker
 
 ---
 
@@ -77,7 +77,7 @@ I chose modern tools that are used in real production:
 - 📝 **FSM Logic:** Clear interaction scenarios to avoid user confusion.
 - 📈 **Future:** Plans include statistics graphics via Matplotlib.
 - ⌨️ **Inline Keyboard** Inline buttons
-- 🐳 ** Docker Packaged in Docker
+- 🐳 **Docker Packaged** in Docker
 ---
 
 ### 📂 Project Structure

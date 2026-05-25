@@ -1,14 +1,13 @@
 import asyncio
 import os
 import logging
-import asyncpg
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from parser import shadow_parser
 from handlers import common, expenses, settings
-from database import init_db, all_user_id
+from database import init_postgres, all_user_id
 from states import Broadcast
 from middlewares.main_middleware import ShadowMiddleware
 from config import bot
@@ -56,28 +55,13 @@ async def mailing_logic(message: types.Message, state: FSMContext):
     await state.clear()
 
 async def main():
-    init_db()
-    logger.info("Бот запущен и готов к работе")
+    pool = await init_postgres()
     dp.include_router(common.router)
     dp.include_router(expenses.router)
     dp.include_router(settings.router)
     asyncio.create_task(shadow_parser())
-    pool = await asyncpg.create_pool(
-    user='alex_developer',
-    password='my_secret_password',
-    database='bot_data',
-    host='127.0.0.1',
-    port=5432
-)
-    await pool.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        telegram_id BIGINT PRIMARY KEY,
-        username VARCHAR(50),
-        first_name VARCHAR(100),
-        registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    """)
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, pool=pool)
+    logger.info("Бот запущен и готов к работе")
 
 if __name__ == "__main__":
     asyncio.run(main())

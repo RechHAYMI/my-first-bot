@@ -1,4 +1,4 @@
-# 📊 MoneyFlow Bot | Day 40+ Progress
+# 📊 MoneyFlow Bot 
 
 ### 🐍 О проекте
 Приветсвую всех, это мой первый "масштабный" проект на python, сейчас это мой основной проект.
@@ -52,7 +52,7 @@
 
 
 
-# 📊 MoneyFlow Bot | Day 40+ Progress
+# 📊 MoneyFlow Bot
 
 ### 🐍 About the Project
 Hello everyone, this is my first "large-scale" project in Python, and it's currently my main project.

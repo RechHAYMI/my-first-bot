@@ -1,4 +1,4 @@
-# 📊 MoneyFlow Bot | Day 40+ Progress
+# 📊 MoneyFlow Bot 
 
 ### 🐍 О проекте
 Приветсвую всех, это мой первый "масштабный" проект на python, сейчас это мой основной проект.
@@ -11,18 +11,19 @@
 Я выбрал современные инструменты, которые используют в реальном продакшене:
 
 * **Framework:** [aiogram 3.x](https://github.com/aiogram/aiogram) 
-* **Database:** SQLite3 (переезжаем на PostgreSQL)
+* **Database:** PostgreSQL
 * **Architecture:** Middleware, FSM (Finite State Machine), Router-based logic
 * **OS:** Разработка ведется полностью на **Arch Linux** 🖥️
 
 ---
 
-### 🔥 Ключевые фичи
+### 🔥 Приколы
 - ✅ **Admin ShadowMiddleware:** Умная проверка прав доступа.
 - 📬 **Smart Broadcast:** Система рассылки через `copy_to` для сохранения оригинального контента.
 - 📝 **FSM Logic:** Четкие сценарии взаимодействия, чтобы пользователь не запутался.
 - 📈 **Future:** В планах графики статистики через Matplotlib.
 - ⌨️ **Inline Keyboard** Инлайн кнопочки
+- 🐳 **Docker Упакован** в Docker
 
 ---
 
@@ -51,7 +52,7 @@
 
 
 
-# 📊 MoneyFlow Bot | Day 40+ Progress
+# 📊 MoneyFlow Bot
 
 ### 🐍 About the Project
 Hello everyone, this is my first "large-scale" project in Python, and it's currently my main project.
@@ -64,7 +65,7 @@ The bot helps me keep track of my finances, but its main goal for me is to learn
 I chose modern tools that are used in real production:
 
 * **Framework:** [aiogram 3.x](https://github.com/aiogram/aiogram)
-* **Database:** SQLite3 (we're moving to PostgreSQL)
+* **Database:** PostgreSQL
 * **Architecture:** Middleware, FSM (Finite State Machine), Router-based logic
 * **OS:** Development is conducted entirely on **Arch Linux** 🖥️
 
@@ -76,7 +77,7 @@ I chose modern tools that are used in real production:
 - 📝 **FSM Logic:** Clear interaction scenarios to avoid user confusion.
 - 📈 **Future:** Plans include statistics graphics via Matplotlib.
 - ⌨️ **Inline Keyboard** Inline buttons
-
+- 🐳 **Docker Packaged** in Docker
 ---
 
 ### 📂 Project Structure

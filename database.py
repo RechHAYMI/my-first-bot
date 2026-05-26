@@ -25,3 +25,8 @@ async def db_add_user(pool, telegram_id, username, first_name):
         "INSERT INTO users (telegram_id, username, first_name) VALUES ($1, $2, $3) ON CONFLICT (telegram_id) DO NOTHING",
         telegram_id, username, first_name
     )
+
+
+async def check_user(pool, telegram_id):
+    result_id = await pool.fetchval("SELECT 1 FROM users WHERE telegram_id = $1", telegram_id)
+    return result_id is not None

@@ -17,6 +17,16 @@ async def init_postgres():
             registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """)
+        
+    await pool.execute("""
+        CREATE TABLE IF NOT EXISTS expenses (
+            id SERIAL PRIMARY KEY,
+            telegram_id BIGINT REFERENCES users(telegram_id),
+            amount NUMERIC(10, 2) NOT NULL,
+            category VARCHAR(50) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
     return pool
 
 
@@ -30,3 +40,25 @@ async def db_add_user(pool, telegram_id, username, first_name):
 async def check_user(pool, telegram_id):
     result_id = await pool.fetchval("SELECT 1 FROM users WHERE telegram_id = $1", telegram_id)
     return result_id is not None
+
+
+async def db_add_expense(pool, telegram_id, amount, category):
+    await pool.execute(
+        "INSERT INTO expenses (telegram_id, amount, category) VALUES ($1, $2, $3)",
+        telegram_id, amount, category
+    )
+
+
+async def get_category_stats(pool, telegram_id):
+    rows = await pool.fetch(
+        "SELECT category, SUM(amount) FROM expenses WHERE telegram_id = $1 GROUP BY category",
+        telegram_id,
+    )
+    return rows
+
+
+async def delete_last_expense(pool, telegram_id):
+    await pool.execute(
+        "DELETE from expenses WHERE id = (SELECT id FROM expenses WHERE telegram_id = $1 ORDER BY created_at DESC LIMIT)"
+        telegram_id
+    )

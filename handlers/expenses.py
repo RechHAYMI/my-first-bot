@@ -43,7 +43,7 @@ async def process_sum(message: types.Message, state: FSMContext):
     category = user_data.get("categor")
     try:
         amount = float(message.text.replace(",", "."))
-        db_add_expense(message.from_user.id, amount, category)
+        await db_add_expense(message.from_user.id, amount, category)
         await state.clear()
         await message.answer(f"Записано: {amount} руб. в категорию {category}")
     except ValueError:
@@ -67,14 +67,14 @@ async def stats(message: types.Message):
 @router.message(F.text.lower() == "cancel")
 @router.message(Command("cancel"))
 async def cansel(message: types.Message):
-    delete_last_expense(message.from_user.id)
+    await delete_last_expense(message.from_user.id)
     await message.answer("Последния операция была отменена")
 
 
 @router.callback_query(F.data == "delete_exp")
 async def delete_callback(callback: types.CallbackQuery):
     logger.info(f"Пользователь {callback.from_user.id} удалил свой последний расход")
-    delete_last_expense(callback.from_user.id)
+    await delete_last_expense(callback.from_user.id)
     await callback.answer("Расход удален!")
     await callback.message.edit_text("Запись успешно удалена!")
 
@@ -83,7 +83,7 @@ async def delete_callback(callback: types.CallbackQuery):
 @router.message(F.text.lower() == "export")
 @router.message(Command("export"))
 async def export(message: types.Message):
-    rows = get_all_expenses(message.from_user.id)
+    rows = await get_all_expenses(message.from_user.id)
     logger.info(f"Пользователь {message.from_user.id} экспортировал свои данные.")
     if not rows:
         await message.answer("У вас пока нет данных для экспорта.")

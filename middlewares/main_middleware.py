@@ -8,6 +8,6 @@ class ShadowMiddleware(BaseMiddleware):
         user = event.from_user
         if user is not None:
             pool = data.get("pool")
-            db_add_user(pool, user.id, user.username, user.first_name)
+            await db_add_user(pool, user.id, user.username, user.first_name)
         data["is_admin"] = (user.id == ADMIN_ID)
         return await handler(event, data)

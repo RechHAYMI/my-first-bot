@@ -10,7 +10,7 @@ from handlers import common, expenses, settings
 from database import init_postgres, all_user_id
 from states import Broadcast
 from middlewares.main_middleware import ShadowMiddleware
-from config import bot
+from config import bot, ADMIN_ID
 
 
 logging.basicConfig(
@@ -22,12 +22,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-bot = Bot(token=TOKEN)
+
 dp = Dispatcher()
 
 
-dp.message.outer_middleware(ShadowMiddleware())
-dp.callback_query.outer_middleware(ShadowMiddleware())
+dp.update.outer_middleware(ShadowMiddleware())
 
 @dp.message(Command("sendall"))
 async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool):
@@ -39,7 +38,7 @@ async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool
 
 @dp.message(Broadcast.text)
 async def mailing_logic(message: types.Message, state: FSMContext):
-    users = all_user_id()
+    users = await all_user_id()
     count = 0
     errors = 0
     for user in users:
@@ -56,9 +55,7 @@ async def mailing_logic(message: types.Message, state: FSMContext):
 
 async def main():
     pool = await init_postgres()
-    dp.include_router(common.router)
-    dp.include_router(expenses.router)
-    dp.include_router(settings.router)
+    dp.include_routers(common.router, expenses.router, settings.router)
     asyncio.create_task(shadow_parser())
     await dp.start_polling(bot, pool=pool)
     logger.info("Бот запущен и готов к работе")

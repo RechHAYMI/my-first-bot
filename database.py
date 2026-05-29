@@ -59,6 +59,28 @@ async def get_category_stats(pool, telegram_id):
 
 async def delete_last_expense(pool, telegram_id):
     await pool.execute(
-        "DELETE from expenses WHERE id = (SELECT id FROM expenses WHERE telegram_id = $1 ORDER BY created_at DESC LIMIT)"
-        telegram_id
+        "DELETE from expenses WHERE id = (SELECT id FROM expenses WHERE telegram_id = $1 ORDER BY created_at DESC LIMIT 1)",
+        telegram_id,
     )
+
+
+async def get_user_name(pool, telegram_id):
+    row = await pool.fetchval(
+        "SELECT first_name FROM users WHERE telegram_id = $1",
+        telegram_id,
+    )
+    return row
+
+
+async def update_user_name(pool, new_name, telegram_id):
+    await pool.execute(
+        "UPDATE users SET first_name = $1 WHERE telegram_id = $2",
+        new_name, telegram_id
+    )
+
+
+async def all_user_id(pool):
+    rows = await pool.fetch(
+        "SELECT telegram_id FROM users"
+    )
+    return [row['telegram_id'] for row in rows]

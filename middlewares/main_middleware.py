@@ -1,4 +1,4 @@
-from database import db_add_user, user_exists
+from database import db_add_user
 from aiogram import BaseMiddleware
 from typing import Dict, Any, Callable
 from config import ADMIN_ID

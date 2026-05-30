@@ -6,14 +6,14 @@ from config import bot
 
 
 
-async def shadow_parser():
+async def shadow_parser(pool):
     current_quotes = await get_quotes()
     last_status = current_quotes[0]
     while True:
         print("Проверяю сайт...")
         new_quotes = await get_quotes()
         new_status = new_quotes[0]
-        users = all_user_id()
+        users = all_user_id(pool)
         if new_status != last_status:
             for user in users:
                 try:

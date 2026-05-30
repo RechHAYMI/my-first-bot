@@ -5,9 +5,10 @@ from config import ADMIN_ID
 
 class ShadowMiddleware(BaseMiddleware):
     async def __call__(self, handler, event, data):
+        pool = data.get("pool")
         user = event.from_user
-        if user is not None:
-            pool = data.get("pool")
+        if user is not None and pool:
             await db_add_user(pool, user.id, user.username, user.first_name)
         data["is_admin"] = (user.id == ADMIN_ID)
+        data["pool"] = pool
         return await handler(event, data)

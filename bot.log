@@ -11,3 +11,47 @@
 2026-05-17 14:24:35,760 - INFO - Бот запущен и готов к работе
 2026-05-17 14:24:35,761 - INFO - Start polling
 2026-05-17 14:25:36,298 - INFO - Polling stopped
+2026-05-30 13:04:16,496 - INFO - Start polling
+2026-05-30 13:04:17,630 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:04:18,269 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:04:18,443 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-23' coro=<shadow_parser() done, defined at /home/rech/my-first-bot/parser.py:9> exception=TypeError("all_user_id() missing 1 required positional argument: 'pool'")>
+Traceback (most recent call last):
+  File "/home/rech/my-first-bot/parser.py", line 16, in shadow_parser
+    users = all_user_id()
+TypeError: all_user_id() missing 1 required positional argument: 'pool'
+2026-05-30 13:05:17,106 - INFO - Polling stopped
+2026-05-30 13:28:05,270 - INFO - Start polling
+2026-05-30 13:28:06,293 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:28:06,919 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:28:07,085 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-23' coro=<shadow_parser() done, defined at /home/rech/my-first-bot/parser.py:9> exception=TypeError("all_user_id() missing 1 required positional argument: 'pool'")>
+Traceback (most recent call last):
+  File "/home/rech/my-first-bot/parser.py", line 16, in shadow_parser
+    users = all_user_id()
+TypeError: all_user_id() missing 1 required positional argument: 'pool'
+2026-05-30 13:29:05,400 - INFO - Polling stopped
+2026-05-30 13:30:21,761 - INFO - Start polling
+2026-05-30 13:30:22,385 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:30:23,039 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:30:23,211 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-23' coro=<shadow_parser() done, defined at /home/rech/my-first-bot/parser.py:9> exception=TypeError("all_user_id() missing 1 required positional argument: 'pool'")>
+Traceback (most recent call last):
+  File "/home/rech/my-first-bot/parser.py", line 16, in shadow_parser
+    users = all_user_id()
+TypeError: all_user_id() missing 1 required positional argument: 'pool'
+2026-05-30 13:30:25,654 - INFO - Run polling for bot @Python_First_Project_bot id=8766217602 - 'Money Bot Manager'
+2026-05-30 13:31:05,121 - WARNING - Received SIGINT signal
+2026-05-30 13:31:05,122 - INFO - Polling stopped for bot @Python_First_Project_bot id=8766217602 - 'Money Bot Manager'
+2026-05-30 13:31:05,122 - INFO - Polling stopped
+2026-05-30 13:31:05,374 - INFO - Бот запущен и готов к работе
+2026-05-30 13:33:06,769 - INFO - Start polling
+2026-05-30 13:33:07,651 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:33:08,372 - INFO - HTTP Request: GET https://quotes.toscrape.com/ "HTTP/1.1 200 OK"
+2026-05-30 13:33:08,544 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-23' coro=<shadow_parser() done, defined at /home/rech/my-first-bot/parser.py:9> exception=TypeError("all_user_id() missing 1 required positional argument: 'pool'")>
+Traceback (most recent call last):
+  File "/home/rech/my-first-bot/parser.py", line 16, in shadow_parser
+    users = all_user_id()
+TypeError: all_user_id() missing 1 required positional argument: 'pool'
+2026-05-30 13:34:06,897 - INFO - Polling stopped

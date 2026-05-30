@@ -37,13 +37,13 @@ async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool
         await message.answer("Отказано в доступе")
 
 @dp.message(Broadcast.text)
-async def mailing_logic(message: types.Message, state: FSMContext):
-    users = await all_user_id()
+async def mailing_logic(message: types.Message, state: FSMContext, pool):
+    users = await all_user_id(pool)
     count = 0
     errors = 0
     for user in users:
         try:
-            await message.copy_to(chat_id=user[0])
+            await message.copy_to(chat_id=user)
             count += 1
             await asyncio.sleep(0.05)
         except Exception as e:
@@ -56,7 +56,7 @@ async def mailing_logic(message: types.Message, state: FSMContext):
 async def main():
     pool = await init_postgres()
     dp.include_routers(common.router, expenses.router, settings.router)
-    asyncio.create_task(shadow_parser())
+    asyncio.create_task(shadow_parser(pool))
     await dp.start_polling(bot, pool=pool)
     logger.info("Бот запущен и готов к работе")
 

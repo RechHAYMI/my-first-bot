@@ -15,20 +15,20 @@ logger = logging.getLogger(__name__)
 
 @router.message(F.text.lower() == "settings")
 @router.message(Command("settings"))
-async def settings(message: types.Message):
-    current_name = get_user_name(message.from_user.id)
+async def settings(message: types.Message, pool):
+    current_name = await get_user_name(pool, message.from_user.id)
     await message.answer(f"Твое имя: {current_name}, Что изменим? ", reply_markup=get_settings_kb())
 
 
 @router.message(F.text.lower() == "изменить имя")
 @router.message(Command("изменить имя"))
-async def change_name(message: types.Message, state: FSMContext):
+async def change_name(message: types.Message, state: FSMContext, pool):
     await state.set_state(Profile.name)
     await message.answer("Как тебя зовут?")
 
 
 @router.message(Profile.name)
-async def name(message: types.Message, state: FSMContext):
-    update_user_name(message.from_user.id, message.text)
+async def name(message: types.Message, state: FSMContext, pool):
+    await update_user_name(pool, message.text, message.from_user.id)
     await state.clear()
     await message.answer(f"Имя {message.text} сохранено!")

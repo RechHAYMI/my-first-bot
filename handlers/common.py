@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 @router.message(F.text.lower() == "stop")
 @router.message(Command("stop"))
-async def stop(message: types.Message, state: FSMContext):
+async def stop(message: types.Message, state: FSMContext, pool):
     await state.clear()
     await message.answer("Отменено", reply_markup=get_main_kb())
 
@@ -25,8 +25,8 @@ async def stop(message: types.Message, state: FSMContext):
 
 @router.message(F.text.lower() == "start")
 @router.message(Command("start"))
-async def start_handler(message: types.Message, state: FSMContext):
-    if check_user(message.from_user.id):
+async def start_handler(message: types.Message, state: FSMContext, pool):
+    if await check_user(pool, message.from_user.id):
         await message.answer("Рад возвращению!", reply_markup=get_main_kb())
     else:
         await state.set_state(Profile.name)
@@ -35,20 +35,20 @@ async def start_handler(message: types.Message, state: FSMContext):
 
 
 @router.message(Profile.name)
-async def process_name(message: types.Message, state: FSMContext):
-    db_add_user(message.from_user.id, message.text, message.from_user.username)       
+async def process_name(message: types.Message, state: FSMContext, pool):
+    await db_add_user(pool, message.from_user.id, message.text, message.from_user.username)       
     await state.clear()
     await message.answer("Имя сохранено", reply_markup=get_main_kb())
 
 
 @router.message(F.text.lower() == "info")
 @router.message(Command("info"))
-async def info_handler(message: types.Message):
+async def info_handler(message: types.Message, pool):
     await message.answer("Это финансовый бот на Python, он поможет тебе справится со всеми тратами")
 
 
 
 @router.message(F.text.lower() == "back")
 @router.message(Command("back"))
-async def back_handler(message: types.Message, state: FSMContext):
-    await start_handler(message, state)
+async def back_handler(message: types.Message, state: FSMContext, pool):
+    await start_handler(message, state, pool)

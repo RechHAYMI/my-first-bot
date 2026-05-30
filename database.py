@@ -84,3 +84,11 @@ async def all_user_id(pool):
         "SELECT telegram_id FROM users"
     )
     return [row['telegram_id'] for row in rows]
+
+
+async def get_all_expenses(pool, telegram_id):
+    rows = await pool.fetch(
+        "SELECT category, amount created_at FROM expenses WHERE telegram_id = $1 ORDER BY created_at DESC",
+        telegram_id
+    )
+    return rows

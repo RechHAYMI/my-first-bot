@@ -31,4 +31,4 @@ async def change_name(message: types.Message, state: FSMContext, pool):
 async def name(message: types.Message, state: FSMContext, pool):
     await update_user_name(pool, message.text, message.from_user.id)
     await state.clear()
-    await message.answer(f"Имя {message.text} сохранено!")
+    await message.answer(f"Имя {message.text} сохранено!", reply_markup=get_main_kb())

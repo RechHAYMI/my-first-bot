@@ -48,7 +48,8 @@ async def info_handler(message: types.Message, pool):
 
 
 
-@router.message(F.text.lower() == "back")
+@router.message(F.text.lower() == "назад")
 @router.message(Command("back"))
 async def back_handler(message: types.Message, state: FSMContext, pool):
+    await state.clear()
     await start_handler(message, state, pool)

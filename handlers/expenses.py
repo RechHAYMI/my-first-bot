@@ -4,7 +4,7 @@ import csv
 import matplotlib.pyplot as plt
 from aiogram import Router, types, F
 from aiogram.filters import Command
-from keyboards import get_main_kb, get_categor_kb, get_delete_kb
+from keyboards import get_main_kb, get_categor_kb, get_delete_kb, CategoryCallback
 from states import Profile, FSMExpense, Broadcast
 from database import get_category_stats, delete_last_expense, db_add_expense
 from aiogram.types import FSInputFile
@@ -27,9 +27,9 @@ async def add_expense(message: types.Message, state: FSMContext):
     await message.answer("Выберите категорию ниже", reply_markup=get_categor_kb())
 
 
-@router.callback_query(F.data.startswith("cat_"))
-async def categor(callback: types.CallbackQuery, state: FSMContext):
-    category_name = callback.data.split("_")[1]
+@router.callback_query(CategoryCallback.filter())
+async def categor(callback: types.CallbackQuery, callback_data: CategoryCallback, state: FSMContext):
+    category_name = callback_data.name
     await state.update_data(categor=category_name)
     await state.set_state(FSMExpense.sum)
     await callback.message.answer(f"Выбрана категория: {category_name}. Теперь введите сумму.")

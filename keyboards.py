@@ -1,4 +1,8 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.filters.callback_data import CallbackData
+
+class CategoryCallback(CallbackData, prefix="expense"):
+    name: str
 
 
 
@@ -29,6 +33,6 @@ def get_settings_kb():
 
 def get_categor_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Еда", callback_data="cat_food")],
-        [InlineKeyboardButton(text="Такси", callback_data="cat_taxi")]
+        [InlineKeyboardButton(text="Еда", callback_data=CategoryCallback(name="food").pack())],
+        [InlineKeyboardButton(text="Такси", callback_data=CategoryCallback(name="taxi").pack())]
     ])

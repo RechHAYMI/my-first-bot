@@ -9,7 +9,7 @@ from parser import shadow_parser
 from handlers import common, expenses, settings
 from database import init_postgres, all_user_id
 from states import Broadcast
-from middlewares.main_middleware import ShadowMiddleware
+from middlewares.main_middleware import ShadowMiddleware, ThrottlingMiddleware
 from config import bot, ADMIN_ID
 
 
@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 
 dp = Dispatcher()
 
-
-dp.update.outer_middleware(ShadowMiddleware())
+dp.message.middleware(ThrottlingMiddleware(limit=2.0))
+dp.message.middleware(ShadowMiddleware())
 
 @dp.message(Command("sendall"))
 async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool):
@@ -43,7 +43,7 @@ async def mailing_logic(message: types.Message, state: FSMContext, pool):
     errors = 0
     for user in users:
         try:
-            await message.copy_to(chat_id=user)
+            await message.copy_to(chat_id=user[0])
             count += 1
             await asyncio.sleep(0.05)
         except Exception as e:

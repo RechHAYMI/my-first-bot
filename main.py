@@ -1,10 +1,13 @@
 import asyncio
 import os
 import logging
-from dotenv import load_dotenv
+
+
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
+
+from dotenv import load_dotenv
 from parser import shadow_parser
 from handlers import common, expenses, settings
 from database import init_postgres, all_user_id
@@ -43,11 +46,11 @@ async def mailing_logic(message: types.Message, state: FSMContext, pool):
     errors = 0
     for user in users:
         try:
-            await message.copy_to(chat_id=user[0])
+            await message.copy_to(chat_id=user)
             count += 1
             await asyncio.sleep(0.05)
         except Exception as e:
-            print(f"Не удалось отправить {user[0]}. Ошибка: {e}")
+            print(f"Не удалось отправить {user}. Ошибка: {e}")
             errors += 1  
             
     await message.answer(f"Рассылка завершена! Получили: {count}, Не смогли получить: {errors}")

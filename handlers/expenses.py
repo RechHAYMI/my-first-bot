@@ -2,13 +2,16 @@ import logging
 import os
 import csv
 import matplotlib.pyplot as plt
+
+from aiogram.types import FSInputFile
+from aiogram.fsm.context import FSMContext
 from aiogram import Router, types, F
 from aiogram.filters import Command
+
+
 from keyboards import get_main_kb, get_categor_kb, get_delete_kb, CategoryCallback
 from states import Profile, FSMExpense, Broadcast
 from database import get_category_stats, delete_last_expense, db_add_expense, get_all_expenses
-from aiogram.types import FSInputFile
-from aiogram.fsm.context import FSMContext
 from utils import generate_stats_chart
 
 

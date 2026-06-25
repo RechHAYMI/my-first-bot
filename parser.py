@@ -4,6 +4,14 @@ from bs4 import BeautifulSoup
 from database import all_user_id
 from config import bot
 
+logging.basicConfig(
+    level=logging.INFO, 
+    format="%(asctime)s - %(levelname)s - %(message)s", 
+    filename="bot.log", 
+    encoding="utf-8"
+)
+logger = logging.getLogger(__name__)
+
 
 
 async def shadow_parser(pool):

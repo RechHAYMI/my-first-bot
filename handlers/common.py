@@ -29,8 +29,8 @@ async def stop(message: types.Message, state: FSMContext, pool):
 
 @router.message(F.text.lower() == "start")
 @router.message(Command("start"))
-async def start_handler(message: types.Message, state: FSMContext, pool):
-    if await check_user(pool, message.from_user.id):
+async def start_handler(message: types.Message, state: FSMContext, db):
+    if await db.check_user(message.from_user.id):
         await message.answer("Рад возвращению!", reply_markup=get_main_kb())
     else:
         await state.set_state(Profile.name)

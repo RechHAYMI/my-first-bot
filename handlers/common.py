@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 
 from keyboards import get_main_kb
 from states import Profile
-from database import db_add_user, check_user
+
 
 
 
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 @router.message(F.text.lower() == "stop")
 @router.message(Command("stop"))
-async def stop(message: types.Message, state: FSMContext, pool):
+async def stop(message: types.Message, state: FSMContext, db):
     await state.clear()
     await message.answer("Отменено", reply_markup=get_main_kb())
 
@@ -39,21 +39,21 @@ async def start_handler(message: types.Message, state: FSMContext, db):
 
 
 @router.message(Profile.name)
-async def process_name(message: types.Message, state: FSMContext, pool):
-    await db_add_user(pool, message.from_user.id, message.text, message.from_user.username)       
+async def process_name(message: types.Message, state: FSMContext, db):
+    await db.add_user(message.from_user.id, message.from_user.username, message.text)       
     await state.clear()
     await message.answer("Имя сохранено", reply_markup=get_main_kb())
 
 
 @router.message(F.text.lower() == "info")
 @router.message(Command("info"))
-async def info_handler(message: types.Message, pool):
+async def info_handler(message: types.Message, db):
     await message.answer("Это финансовый бот на Python, он поможет тебе справится со всеми тратами")
 
 
 
 @router.message(F.text.lower() == "назад")
 @router.message(Command("back"))
-async def back_handler(message: types.Message, state: FSMContext, pool):
+async def back_handler(message: types.Message, state: FSMContext, db):
     await state.clear()
-    await start_handler(message, state, pool)
+    await start_handler(message, state, db)

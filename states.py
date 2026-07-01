@@ -11,3 +11,6 @@ class FSMExpense(StatesGroup):
 
 class Broadcast(StatesGroup):
     text = State()
+
+class SettingsStates(StatesGroup):
+    waiting_for_name = State()

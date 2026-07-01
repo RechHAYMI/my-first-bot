@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.message(F.text.lower() == "add expenses")
-@router.message(Command("add expenses"))
+@router.message(Command("add_expenses"))
 async def add_expense(message: types.Message, state: FSMContext):
     await state.set_state(FSMExpense.categor)
     await message.answer("Выберите категорию ниже", reply_markup=get_categor_kb())

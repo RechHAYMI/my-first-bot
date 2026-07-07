@@ -1,17 +1,14 @@
-import asyncio
 import os
 import logging
-
+import asyncio
 
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
 
+from database import init_postgres
 from dotenv import load_dotenv
 from parser import shadow_parser
-from handlers import common, expenses, settings
-from database import init_postgres, all_user_id
-from states import Broadcast
+from handlers import common, expenses, settings, admin
 from middlewares.main_middleware import ShadowMiddleware, ThrottlingMiddleware
 from config import bot, ADMIN_ID
 
@@ -31,34 +28,10 @@ dp = Dispatcher()
 dp.message.middleware(ThrottlingMiddleware(limit=2.0))
 dp.message.middleware(ShadowMiddleware())
 
-@dp.message(Command("sendall"))
-async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool):
-    if is_admin:
-        state.set_state(Broadcast.text)
-        await message.answer(f"{message.from_user.id} Жду контент для рассылки")
-    else:
-        await message.answer("Отказано в доступе")
-
-@dp.message(Broadcast.text)
-async def mailing_logic(message: types.Message, state: FSMContext, pool):
-    users = await all_user_id(pool)
-    count = 0
-    errors = 0
-    for user in users:
-        try:
-            await message.copy_to(chat_id=user)
-            count += 1
-            await asyncio.sleep(0.05)
-        except Exception as e:
-            print(f"Не удалось отправить {user}. Ошибка: {e}")
-            errors += 1  
-            
-    await message.answer(f"Рассылка завершена! Получили: {count}, Не смогли получить: {errors}")
-    await state.clear()
 
 async def main():
     pool = await init_postgres()
-    dp.include_routers(common.router, expenses.router, settings.router)
+    dp.include_routers(common.router, expenses.router, settings.router, admin.router)
     asyncio.create_task(shadow_parser(pool))
     await dp.start_polling(bot, pool=pool)
     logger.info("Бот запущен и готов к работе")

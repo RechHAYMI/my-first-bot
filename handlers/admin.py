@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from aiogram import Router, types, F
-from aiogram.filters import Command
+from aiogram.filters import Command, StateFilter
 from states import Broadcast
 from aiogram.fsm.context import FSMContext
 
@@ -24,7 +24,14 @@ async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool
     else:
         await message.answer("Отказано в доступе")
 
-@router.message(Broadcast.text)
+@routrt.message(Command("cancel_sendall"), StateFilter(Broadcast.text))
+@router.message(F.text.lower() == "cancel_sendall", StateFilter(Broadcast.text))
+async def cancel_sendall(message: types.Message, state: FSMContext):
+    await state.clear()
+    await message.answer("Рассылка успешно отменена!")
+
+
+@router.message(StateFilter(Broadcast.text))
 async def mailing_logic(message: types.Message, state: FSMContext, db):
     users = await db.all_user_id()
     count = 0

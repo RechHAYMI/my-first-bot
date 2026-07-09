@@ -66,13 +66,6 @@ async def stats(message: types.Message, db):
 
 
 
-@router.message(F.text.lower() == "cancel")
-@router.message(Command("cancel"))
-async def cansel(message: types.Message, db):
-    await db.delete_last_expense(message.from_user.id)
-    await message.answer("Последния операция была отменена")
-
-
 @router.callback_query(F.data == "delete_exp")
 async def delete_callback(callback: types.CallbackQuery, db):
     logger.info(f"Пользователь {callback.from_user.id} удалил свой последний расход")

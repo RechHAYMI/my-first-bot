@@ -27,4 +27,15 @@ async def init_postgres():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """)
+
+
+    await pool.execute("""
+        CREATE TABLE IF NOT EXISTS custom_categories (
+        id SERIAL PRIMARY KEY,
+        telegram_id BIGINT REFERENCES users(telegram_id),
+        category_name VARCHAR(50),
+        registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
     return pool

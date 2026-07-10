@@ -63,3 +63,18 @@ class DatabaseLayer():
             telegram_id
         )
         return rows
+
+
+    async def add_custom_category(self, telegram_id, category_name):
+        await self.pool.execute(
+            "INSERT INTO custom_categories (telegram_id, category_name) VALUES ($1, $2) ON CONFLICT (telegram_id, category_name) DO NOTHING",
+            telegram_id, category_name
+        )
+
+    
+    async def get_user_categories(self,telegram_id):
+        rows = await self.pool.fetch(
+            "SELECT id, category_name FROM custom_categories WHERE telegram_id = $1 ORDER BY registered_at DESC",
+            telegram_id
+        )
+        return rows

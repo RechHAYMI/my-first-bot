@@ -34,7 +34,8 @@ async def init_postgres():
         id SERIAL PRIMARY KEY,
         telegram_id BIGINT REFERENCES users(telegram_id),
         category_name VARCHAR(50),
-        registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (telegram_id, category_name)
     );
     """)
 

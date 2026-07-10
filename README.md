@@ -14,6 +14,7 @@
 * **Database:** PostgreSQL
 * **Architecture:** Middleware, FSM (Finite State Machine), Router-based logic
 * **OS:** Разработка ведется полностью на **Arch Linux** 🖥️
+* **Docker:** PostgreSQL упакована в докер
 
 ---
 
@@ -23,8 +24,6 @@
 - 📝 **FSM Logic:** Четкие сценарии взаимодействия, чтобы пользователь не запутался.
 - 📈 **Future:** В планах графики статистики через Matplotlib.
 - ⌨️ **Inline Keyboard** Инлайн кнопочки
-- 🐳 **Docker Упакован** в Docker
-
 ---
 
 ### 📂 Структура проекта

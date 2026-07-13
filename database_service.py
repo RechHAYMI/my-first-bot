@@ -1,4 +1,3 @@
-
 class DatabaseLayer(): 
     def __init__(self, pool): 
         self.pool = pool 
@@ -78,3 +77,17 @@ class DatabaseLayer():
             telegram_id
         )
         return rows
+
+
+    async def delete_custom_category(self, category_id, telegram_id):
+        await self.pool.execute(
+            "DELETE FROM custom_categories WHERE id = $1 AND telegram_id = $2",
+            category_id, telegram_id
+        )
+
+
+    async def clear_all_custom_categories(self, telegram_id):
+        await self.pool.execute(
+            "DELETE FROM custom_categories WHERE telegram_id = $1",
+            telegram_id
+        )

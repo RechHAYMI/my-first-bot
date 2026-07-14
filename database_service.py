@@ -91,3 +91,11 @@ class DatabaseLayer():
             "DELETE FROM custom_categories WHERE telegram_id = $1",
             telegram_id
         )
+
+
+    async def get_category_name_by_id(self, category_id):
+        row = await self.pool.fetchval(
+            "SELECT category_name FROM custom_categories WHERE id = $1",
+            category_id
+        )
+        return row

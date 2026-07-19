@@ -99,3 +99,11 @@ class DatabaseLayer():
             category_id
         )
         return row
+
+
+    async def count_expenses_by_category(self, telegram_id, category_name):
+        count = await self.pool.fetchval(
+            "SELECT COUNT(*) FROM expenses WHERE category = $1 AND telegram_id = $2",
+            category_name, telegram_id
+        )
+        return count

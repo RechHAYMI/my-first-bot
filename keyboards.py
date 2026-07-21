@@ -1,3 +1,4 @@
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters.callback_data import CallbackData
 
@@ -31,8 +32,12 @@ def get_settings_kb():
 
 
 
-def get_categor_kb():
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Еда", callback_data=CategoryCallback(name="food").pack())],
-        [InlineKeyboardButton(text="Такси", callback_data=CategoryCallback(name="taxi").pack())]
-    ])
+def get_categor_kb(user_categories):
+    builder = InlineKeyboardBuilder()
+    builder.button(text="Еда", callback_data=CategoryCallback(name="food").pack())
+    builder.button(text="Такси", callback_data=CategoryCallback(name="taxi").pack())
+    for category in user_categories:
+        builder.button(text=category['category_name'], callback_data=CategoryCallback(name=category['category_name']).pack())
+    builder.button(text="+new categories", callback_data=CategoryCallback(name="+ new categories").pack())
+    builder.adjust(2, 2)
+    return builder.as_markup()

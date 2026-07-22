@@ -5,7 +5,8 @@ from aiogram.filters.callback_data import CallbackData
 class CategoryCallback(CallbackData, prefix="expense"):
     name: str
 
-
+class DeleteCategoryCallback(CallbackData, prefix="del_cat"):
+    id: int
 
 def get_main_kb():
     buttons = [
@@ -40,4 +41,14 @@ def get_categor_kb(user_categories):
         builder.button(text=category['category_name'], callback_data=CategoryCallback(name=category['category_name']).pack())
     builder.button(text="+new categories", callback_data=CategoryCallback(name="+ new categories").pack())
     builder.adjust(2, 2)
+    return builder.as_markup()
+
+
+
+def get_delete_category_kb(user_categories):
+    builder = InlineKeyboardBuilder()
+    for category in user_categories:
+        builder.button(text=category['category_name'] + " ❌", callback_data=DeleteCategoryCallback(id=category['id']).pack())
+    builder.button(text="Назад", callback_data=(name="back_to_settings"))
+    builder.adjust(1)
     return builder.as_markup()

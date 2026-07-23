@@ -24,18 +24,36 @@ logger = logging.getLogger(__name__)
 
 @router.message(F.text.lower() == "add expenses")
 @router.message(Command("add_expenses"))
-async def add_expense(message: types.Message, state: FSMContext):
+async def add_expense(message: types.Message, state: FSMContext, db):
+    user_categories = await db.get_user_categories(message.from_user.id)
     await state.set_state(FSMExpense.categor)
-    await message.answer("Выберите категорию ниже", reply_markup=get_categor_kb())
+    await message.answer("Выберите категорию ниже", reply_markup=get_categor_kb(user_categories))
 
 
 @router.callback_query(CategoryCallback.filter())
 async def categor(callback: types.CallbackQuery, callback_data: CategoryCallback, state: FSMContext):
     category_name = callback_data.name
-    await state.update_data(categor=category_name)
+    if category_name == "+ new categories":
+        await state.set_state(FSMExpense.waiting_for_custom_categories)
+        await callback.message.answer("Введите название новой категории (не больше 50 символов).")
+    else:
+        await state.update_data(categor=category_name)
+        await state.set_state(FSMExpense.sum)
+        await callback.message.answer(f"Выбрана категория: {category_name}. Теперь введите сумму.")
+        await callback.answer()
+
+
+
+@router.message(FSMExpense.waiting_for_custom_categories)
+async def new_categories(message: types.Message, state: FSMContext, db):
+    new_category = message.text.strip()
+    if len(new_category) > 50:
+        new_category = new_category[:50]
+    await db.add_custom_category(message.from_user.id, new_category)
+    await state.update_data(categor=new_category)
     await state.set_state(FSMExpense.sum)
-    await callback.message.answer(f"Выбрана категория: {category_name}. Теперь введите сумму.")
-    await callback.answer()
+    await message.answer(f"Категория '{new_category}' добавлена! Теперь введите сумму.")
+
 
 
 

@@ -49,6 +49,6 @@ def get_delete_category_kb(user_categories):
     builder = InlineKeyboardBuilder()
     for category in user_categories:
         builder.button(text=category['category_name'] + " ❌", callback_data=DeleteCategoryCallback(id=category['id']).pack())
-    builder.button(text="Назад", callback_data=(name="back_to_settings"))
+    builder.button(text="Назад", callback_data="back_to_settings")
     builder.adjust(1)
     return builder.as_markup()

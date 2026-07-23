@@ -7,6 +7,7 @@ class Profile(StatesGroup):
 class FSMExpense(StatesGroup):
     categor = State()
     sum = State()
+    waiting_for_custom_categories = State()
 
 
 class Broadcast(StatesGroup):

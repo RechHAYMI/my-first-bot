@@ -24,7 +24,7 @@ async def mailing_mode(message: types.Message, state: FSMContext, is_admin: bool
     else:
         await message.answer("Отказано в доступе")
 
-@routrt.message(Command("cancel_sendall"), StateFilter(Broadcast.text))
+@router.message(Command("cancel_sendall"), StateFilter(Broadcast.text))
 @router.message(F.text.lower() == "cancel_sendall", StateFilter(Broadcast.text))
 async def cancel_sendall(message: types.Message, state: FSMContext):
     await state.clear()

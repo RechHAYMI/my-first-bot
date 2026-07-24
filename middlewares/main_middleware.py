@@ -1,3 +1,4 @@
+from database_service import DatabaseLayer
 from aiogram import BaseMiddleware
 from typing import Dict, Any, Callable
 from config import ADMIN_ID

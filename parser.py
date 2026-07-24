@@ -1,5 +1,6 @@
 import asyncio
 import httpx 
+import logging
 from bs4 import BeautifulSoup
 from database import all_user_id
 from config import bot

@@ -3,6 +3,8 @@ import os
 import csv
 import matplotlib.pyplot as plt
 
+
+
 from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext
 from aiogram import Router, types, F
@@ -10,6 +12,7 @@ from aiogram.filters import Command
 
 
 from keyboards import get_main_kb, get_categor_kb, get_delete_kb, CategoryCallback
+from keyboards import DeleteCategoryCallback
 from states import Profile, FSMExpense, Broadcast
 from utils import generate_stats_chart
 
@@ -44,6 +47,19 @@ async def categor(callback: types.CallbackQuery, callback_data: CategoryCallback
 
 
 
+@router.callback_query(DeleteCategoryCallback.filter())
+async def delete_category(callback: types.CallbackQuery, callback_data: DeleteCategoryCallback, db):
+    id_category = callback_data.id
+    name = await db.get_category_name_by_id(id_category)
+    expenses_count = await db.count_expenses_by_category(callback.from_user.id, name)
+    if expenses_count > 0:
+        await callback.answer("Нельзя удалить, у вас есть траты, удалите траты категории", show_alert=True)
+    else:
+        await db.delete_custom_category(id_category, callback.from_user.id)
+        await callback.answer("Успешно!")
+        await callback.message.edit_text("Категория успешно удалена!")
+
+
 @router.message(FSMExpense.waiting_for_custom_categories)
 async def new_categories(message: types.Message, state: FSMContext, db):
     new_category = message.text.strip()
@@ -65,7 +81,7 @@ async def process_sum(message: types.Message, state: FSMContext, db):
         amount = float(message.text.replace(",", "."))
         await db.add_expense(message.from_user.id, amount, category)
         await state.clear()
-        await message.answer(f"Записано: {amount} руб. в категорию {category}")
+        await message.answer(f"Записано: {amount} руб. в категорию {category}", reply_markup=get_delete_kb())
     except ValueError:
         await message.answer("Ошибка! Введи сумму цифрами (например, 500 или 150.50)")
 
@@ -84,12 +100,19 @@ async def stats(message: types.Message, db):
 
 
 
-@router.callback_query(F.data == "delete_exp")
+@router.callback_query(F.data == "cancel")
 async def delete_callback(callback: types.CallbackQuery, db):
     logger.info(f"Пользователь {callback.from_user.id} удалил свой последний расход")
     await db.delete_last_expense(callback.from_user.id)
     await callback.answer("Расход удален!")
     await callback.message.edit_text("Запись успешно удалена!")
+
+
+@router.message(F.text.lower() == "cancel")
+async def delete_message_handler(message: types.Message, db):
+    logger.info(f"Пользователь {message.from_user.id} удалил свой последний расход через меню")
+    await db.delete_last_expense(message.from_user.id)
+    await message.answer("Последняя запись успешно удалена!")
 
 
 

@@ -9,7 +9,8 @@ from database import init_postgres
 from dotenv import load_dotenv
 from parser import shadow_parser
 from handlers import common, expenses, settings, admin
-from middlewares.main_middleware import ShadowMiddleware, ThrottlingMiddleware
+from middlewares.main_middleware import ShadowMiddleware
+from middlewares.ThrottlingMiddleware import ThrottlingMiddleware
 from config import bot, ADMIN_ID
 
 

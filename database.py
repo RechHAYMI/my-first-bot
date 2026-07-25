@@ -1,3 +1,4 @@
+import os
 import asyncpg
 
 async def init_postgres():
@@ -5,7 +6,7 @@ async def init_postgres():
         user='alex_developer',
         password='my_secret_password',
         database='bot_data',
-        host='127.0.0.1',
+        host=os.getenv("DB_HOST", "postgres_db"),
         port=5432
     )
 

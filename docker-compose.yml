@@ -1,4 +1,3 @@
-
 services:
   postgres_db:
     image: postgres:16-alpine
@@ -12,6 +11,20 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  bot:
+    build: .
+    container_name: my_telegram_bot
+    restart: always
+    depends_on:
+      - postgres_db
+    environment:
+      - DB_HOST=postgres_db
+      - DB_USER=alex_developer
+      - DB_PASSWORD=my_secret_password
+      - DB_NAME=bot_data
+    env_file:
+      - .env
 
 volumes:
   pgdata:

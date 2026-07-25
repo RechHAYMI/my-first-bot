@@ -12,7 +12,7 @@ def get_main_kb():
     buttons = [
         [KeyboardButton(text="Start"), KeyboardButton(text="Info")],
         [KeyboardButton(text="Settings"), KeyboardButton(text="Stats")],
-        [KeyboardButton(text="Canсel"), KeyboardButton(text="Export")],
+        [KeyboardButton(text="Cancel"), KeyboardButton(text="Export")],
         [KeyboardButton(text="add expenses")]
     ]
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
@@ -21,7 +21,7 @@ def get_main_kb():
 
 def get_delete_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Удалить ❌", callback_data="delete_exp")]
+        [InlineKeyboardButton(text="Удалить ❌", callback_data="cancel")]
     ])
 
 

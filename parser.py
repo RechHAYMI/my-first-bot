@@ -2,7 +2,6 @@ import asyncio
 import httpx 
 import logging
 from bs4 import BeautifulSoup
-from database import all_user_id
 from config import bot
 
 logging.basicConfig(
@@ -15,14 +14,14 @@ logger = logging.getLogger(__name__)
 
 
 
-async def shadow_parser(pool):
+async def shadow_parser(db):
     current_quotes = await get_quotes()
     last_status = current_quotes[0]
     while True:
         print("Проверяю сайт...")
         new_quotes = await get_quotes()
         new_status = new_quotes[0]
-        users = all_user_id(pool)
+        users = db.all_user_id()
         if new_status != last_status:
             for user in users:
                 try:

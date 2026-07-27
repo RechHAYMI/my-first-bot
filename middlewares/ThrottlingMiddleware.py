@@ -2,7 +2,7 @@ import time
 from aiogram import BaseMiddleware
 
 class ThrottlingMiddleware(BaseMiddleware):
-    def __init__(self, limit=2.0):
+    def __init__(self, limit=1.0):
         self.notebook = {}
         self.limit = limit
 

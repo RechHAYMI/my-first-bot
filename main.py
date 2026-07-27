@@ -26,9 +26,11 @@ logger = logging.getLogger(__name__)
 
 dp = Dispatcher()
 
-dp.message.middleware(ThrottlingMiddleware(limit=2.0))
+dp.message.middleware(ThrottlingMiddleware(limit=1.0))
 dp.message.middleware(ShadowMiddleware())
 
+dp.callback_query.middleware(ThrottlingMiddleware(limit=1.0))
+dp.callback_query.middleware(ShadowMiddleware())
 
 async def main():
     pool = await init_postgres()

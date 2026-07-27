@@ -1,7 +1,5 @@
 import logging
 
-
-
 from aiogram import Router, types, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -9,25 +7,26 @@ from aiogram.fsm.context import FSMContext
 from keyboards import get_settings_kb, get_main_kb
 from states import SettingsStates
 
-
 router = Router()
-
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", filename="bot.log", encoding="utf-8")
 logger = logging.getLogger(__name__)
 
 
-@router.message(F.text.lower() == "settings")
+
+@router.message(F.text.lower().in_({"settings ⚙️", "settings", "настройки"}))
 @router.message(Command("settings"))
 async def settings(message: types.Message, db):
     current_name = await db.get_user_name(message.from_user.id)
     await message.answer(f"Твое имя: {current_name}, Что изменим? ", reply_markup=get_settings_kb())
 
 
-@router.message(F.text.lower() == "изменить имя")
+
+@router.message(F.text.lower().in_({"изменить имя", "change name"}))
 async def change_name(message: types.Message, state: FSMContext, db):
     await state.set_state(SettingsStates.waiting_for_name)
     await message.answer("Как тебя зовут?")
+
 
 
 @router.message(SettingsStates.waiting_for_name)
